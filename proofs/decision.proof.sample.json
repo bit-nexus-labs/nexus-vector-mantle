@@ -1,0 +1,12 @@
+{
+  "agent": "Nexus Vector",
+  "agent_type": "Verifiable AI Risk Agent",
+  "decision_id": "demo-decision-001",
+  "source_file": "samples/decision.sample.json",
+  "proof_type": "SHA256_DECISION_COMMITMENT",
+  "hash_algorithm": "SHA-256",
+  "decision_hash": "0x909597939927a3979cc6841dee5c81038db2f9898814a63f9670445fa48a4224",
+  "network_target": "Mantle",
+  "created_at_utc": "2026-06-12T09:23:13.764152Z",
+  "note": "This hash can be anchored on Mantle to prove that the AI risk decision existed unchanged at proof time."
+}

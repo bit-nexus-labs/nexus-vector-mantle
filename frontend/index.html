@@ -1,0 +1,1768 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nexus Vector — Verifiable AI Risk Agent</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --panel: #0d1b2f;
+      --panel-2: #10243d;
+      --text: #eef6ff;
+      --muted: #9fb4cc;
+      --line: rgba(255,255,255,0.10);
+      --accent: #58d5ff;
+      --accent-2: #7c5cff;
+      --good: #62f2a6;
+      --warn: #ffd166;
+      --bad: #ff6b7a;
+      --shadow: 0 24px 80px rgba(0,0,0,0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(88,213,255,0.20), transparent 30%),
+        radial-gradient(circle at 80% 0%, rgba(124,92,255,0.20), transparent 28%),
+        linear-gradient(135deg, #050914 0%, var(--bg) 55%, #071525 100%);
+      color: var(--text);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    body::before {
+      opacity: 0.40;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(126,231,255,0.95) 0 1.2px, transparent 1.8px),
+        radial-gradient(circle at 22% 62%, rgba(126,231,255,0.72) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 38% 12%, rgba(200,225,255,0.50) 0 1.2px, transparent 1.9px),
+        radial-gradient(circle at 64% 20%, rgba(168,85,247,0.78) 0 1.2px, transparent 1.8px),
+        radial-gradient(circle at 76% 68%, rgba(126,231,255,0.65) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 88% 26%, rgba(168,85,247,0.72) 0 1.1px, transparent 1.7px),
+        radial-gradient(circle at 82% 84%, rgba(200,225,255,0.45) 0 1px, transparent 1.7px);
+      background-repeat: repeat;
+      background-size: 320px 240px, 440px 340px, 520px 300px, 400px 280px, 460px 320px, 520px 360px, 580px 420px;
+    }
+
+    body::after {
+      opacity: 0.24;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(88,213,255,0.18), transparent 26%),
+        radial-gradient(circle at 84% 8%, rgba(124,92,255,0.18), transparent 24%),
+        radial-gradient(circle at 68% 72%, rgba(88,213,255,0.10), transparent 18%),
+        radial-gradient(circle at 12% 78%, rgba(124,92,255,0.10), transparent 20%);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 56px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(16,36,61,0.92), rgba(13,27,47,0.92));
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 26px;
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .brand-logo {
+      width: 124px;
+      height: 124px;
+      border-radius: 28px;
+      object-fit: cover;
+      border: 1px solid rgba(126,231,255,0.24);
+      box-shadow: 0 0 54px rgba(88,213,255,0.30);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .brand-name {
+      display: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 12px;
+      margin-bottom: 18px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--good);
+      box-shadow: 0 0 24px var(--good);
+    }
+
+    h1 {
+      font-size: clamp(38px, 7vw, 78px);
+      line-height: 0.92;
+      margin: 0 0 18px;
+      letter-spacing: -0.06em;
+      background: linear-gradient(135deg, #f0fbff 0%, #7ce7ff 38%, #8b7dff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 12px 42px rgba(88,213,255,0.12);
+    }
+
+    .subtitle {
+      font-size: 20px;
+      color: var(--muted);
+      line-height: 1.5;
+      max-width: 780px;
+      margin: 0;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .pill {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.035);
+      color: rgba(238,246,255,0.78);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      background: rgba(255,255,255,0.040);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px;
+      min-height: 78px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .metric .label {
+      color: rgba(159,180,204,0.82);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .metric .value {
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .good {
+      color: var(--good);
+    }
+
+    .warn {
+      color: var(--warn);
+    }
+
+    .bad {
+      color: var(--bad);
+    }
+
+    .section {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .wide {
+      grid-column: span 2;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .flow {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      color: var(--text);
+    }
+
+    .num {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #00111f;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+
+    .hash {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      overflow-wrap: anywhere;
+      background: rgba(0,0,0,0.22);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      color: #d7efff;
+      font-size: 13px;
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .case-box {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .case-box strong {
+      display: block;
+      font-size: 20px;
+      margin-top: 4px;
+    }
+
+    .image-card img {
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      display: block;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .list-item:last-child {
+      border-bottom: 0;
+    }
+
+    .tag {
+      color: var(--text);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .footer {
+      color: var(--muted);
+      text-align: center;
+      padding-top: 28px;
+      font-size: 13px;
+    }
+
+
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(7, 17, 31, 0.86), rgba(7, 17, 31, 0.94)),
+        url("assets/nexus-vector-logo.png") right 7vw top 6vh / min(44vw, 560px) no-repeat;
+      opacity: 0.34;
+      filter: saturate(1.05);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto -8vw -18vh auto;
+      width: 42vw;
+      height: 42vw;
+      z-index: -1;
+      pointer-events: none;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(88,213,255,0.12), transparent 62%);
+      filter: blur(12px);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .hero-action,
+    .viewer-action,
+    .viewer-raw-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(88,213,255,0.28);
+      color: #e8fbff;
+      background: rgba(88,213,255,0.08);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    .hero-action:hover,
+    .viewer-action:hover,
+    .viewer-raw-link:hover {
+      transform: translateY(-1px);
+      border-color: rgba(88,213,255,0.66);
+      background: rgba(88,213,255,0.15);
+    }
+
+    .hero-action::after {
+      content: "→";
+      opacity: 0.72;
+      font-weight: 900;
+    }
+
+    .nexus-presentation-viewer {
+      margin: 28px auto 40px;
+      padding: 0;
+      max-width: 1120px;
+      border-radius: 30px;
+      border: 1px solid rgba(126, 231, 255, 0.20);
+      background:
+        radial-gradient(circle at 16% 0%, rgba(126, 231, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 92% 8%, rgba(168, 85, 247, 0.12), transparent 32%),
+        rgba(8, 12, 28, 0.76);
+      box-shadow: 0 24px 90px rgba(0,0,0,0.34);
+      overflow: hidden;
+    }
+
+    .viewer-shell {
+      display: grid;
+      grid-template-columns: minmax(240px, 0.34fr) minmax(0, 1fr);
+      gap: 0;
+    }
+
+    .viewer-sidebar {
+      padding: 24px;
+      border-right: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.035);
+    }
+
+    .viewer-kicker {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 800;
+    }
+
+    .viewer-sidebar h2 {
+      margin-bottom: 10px;
+    }
+
+    .viewer-sidebar p {
+      margin: 0 0 18px;
+      font-size: 14px;
+    }
+
+    .viewer-actions {
+      display: grid;
+      gap: 10px;
+    }
+
+    .viewer-action {
+      width: 100%;
+      justify-content: flex-start;
+      border-radius: 16px;
+      text-align: left;
+    }
+
+    .viewer-action.is-active {
+      border-color: rgba(88,213,255,0.74);
+      background: linear-gradient(135deg, rgba(88,213,255,0.18), rgba(124,92,255,0.14));
+    }
+
+    .viewer-demo-shortcuts {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(88,213,255,0.32);
+    }
+
+    .viewer-demo-title {
+      margin: 0 0 10px;
+      color: rgba(126,231,255,0.95);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 900;
+    }
+
+    .viewer-demo-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .viewer-demo-link {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 9px 11px;
+      border-radius: 14px;
+      border: 1px solid rgba(126,231,255,0.16);
+      background: rgba(255,255,255,0.035);
+      color: rgba(238,246,255,0.90);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 800;
+      transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+    }
+
+    .viewer-demo-link:hover {
+      transform: translateY(-1px);
+      border-color: rgba(126,231,255,0.48);
+      background: rgba(126,231,255,0.10);
+    }
+
+    .viewer-demo-link small {
+      color: rgba(159,180,204,0.86);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .viewer-content {
+      padding: 24px;
+    }
+
+    .viewer-window {
+      min-height: 420px;
+      border-radius: 26px;
+      border: 1px solid rgba(32, 63, 104, 0.14);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(88,213,255,0.10), transparent 28%),
+        linear-gradient(180deg, #f4f8ff 0%, #e9f1ff 100%);
+      color: #13213a;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.82), 0 24px 70px rgba(0,0,0,0.24);
+      overflow: hidden;
+    }
+
+    .viewer-window-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 22px 24px;
+      border-bottom: 1px solid rgba(32, 63, 104, 0.12);
+      background: rgba(255,255,255,0.58);
+    }
+
+    .viewer-window-title {
+      margin: 0;
+      color: #102033;
+      font-size: clamp(22px, 3vw, 34px);
+      letter-spacing: -0.04em;
+      line-height: 1.06;
+    }
+
+    .viewer-window-subtitle {
+      margin: 8px 0 0;
+      color: #52627f;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .viewer-window-subtitle:empty {
+      display: none;
+    }
+
+    .viewer-window-badge {
+      flex: 0 0 auto;
+      padding: 8px 11px;
+      border-radius: 999px;
+      color: #102033;
+      background: rgba(88,213,255,0.20);
+      border: 1px solid rgba(88,213,255,0.40);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .viewer-window-body {
+      padding: 24px;
+      color: #17243c;
+    }
+
+    .viewer-window-body p,
+    .viewer-window-body li {
+      color: #324865;
+      line-height: 1.68;
+    }
+
+    .viewer-window .flow {
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .viewer-window .flow-step {
+      align-items: flex-start;
+      border: 1px solid rgba(49, 88, 138, 0.14);
+      background: rgba(255,255,255,0.56);
+      color: #1f3450;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+    }
+
+    .viewer-window .flow-step strong,
+    .viewer-window .flow-step span:not(.num) {
+      color: #1f3450;
+    }
+
+    .viewer-window .num {
+      background: linear-gradient(135deg, #58d5ff, #7c5cff);
+      color: #041425;
+      box-shadow: 0 6px 16px rgba(88,213,255,0.24);
+    }
+
+    .viewer-window-body h3 {
+      color: #13213a;
+      margin: 18px 0 8px;
+      font-size: 18px;
+    }
+
+    .viewer-window-body h4 {
+      color: #243553;
+      margin: 16px 0 8px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .viewer-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .viewer-mini-card {
+      border: 1px solid rgba(32, 63, 104, 0.12);
+      background: rgba(255,255,255,0.64);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .viewer-mini-card strong {
+      display: block;
+      color: #102033;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .viewer-soft-note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(88,213,255,0.26);
+      background: rgba(88,213,255,0.10);
+      color: #2d4564;
+      line-height: 1.62;
+    }
+
+    .viewer-code,
+    .viewer-markdown pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+      max-height: 560px;
+      overflow: auto;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(32, 63, 104, 0.14);
+      background: #eef4ff;
+      color: #122033;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+
+    .viewer-markdown {
+      display: grid;
+      gap: 12px;
+    }
+
+    .viewer-markdown h1,
+    .viewer-markdown h2 {
+      color: #102033;
+      -webkit-text-fill-color: #102033;
+      background: none;
+      letter-spacing: -0.03em;
+      margin: 16px 0 6px;
+      line-height: 1.12;
+    }
+
+    .viewer-markdown h1 {
+      font-size: clamp(28px, 4vw, 42px);
+    }
+
+    .viewer-markdown h2 {
+      font-size: clamp(22px, 3vw, 28px);
+      padding-top: 8px;
+    }
+
+    .viewer-markdown h3 {
+      color: #13213a;
+      font-size: 18px;
+      margin: 14px 0 6px;
+    }
+
+    .viewer-markdown p {
+      margin: 0 0 8px;
+    }
+
+    .viewer-markdown code,
+    .viewer-case-meta code {
+      color: inherit;
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+    }
+
+    .viewer-case-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      margin: 0 0 16px;
+    }
+
+    .viewer-case-meta-item {
+      padding: 8px 9px;
+      border-radius: 13px;
+      border: 1px solid rgba(49, 88, 138, 0.12);
+      background: rgba(255,255,255,0.46);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.42);
+      min-height: 50px;
+    }
+
+    .viewer-case-meta-label {
+      display: block;
+      margin-bottom: 3px;
+      color: #60728f;
+      font-size: 8.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+    }
+
+    .viewer-case-meta-value,
+    .viewer-case-meta-value code {
+      color: #182944;
+      background: transparent;
+      font-family: inherit;
+      font-size: 12.5px;
+      line-height: 1.25;
+      letter-spacing: 0;
+      font-weight: 850;
+      padding: 0;
+      border-radius: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .architecture-layers {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 8px 0 18px;
+    }
+
+    .architecture-layer-card {
+      min-height: 106px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(49, 88, 138, 0.14);
+      background: rgba(255,255,255,0.58);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.50);
+    }
+
+    .architecture-layer-card strong {
+      display: block;
+      color: #102033;
+      font-size: 14px;
+      line-height: 1.25;
+      margin-bottom: 7px;
+    }
+
+    .architecture-layer-card span {
+      display: block;
+      color: #455a78;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .architecture-flow-title {
+      margin: 16px 0 8px;
+      color: #243553;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+    }
+
+    .architecture-route {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      margin: 8px 0 18px;
+      padding: 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(49, 88, 138, 0.14);
+      background: rgba(255,255,255,0.48);
+      overflow: visible;
+    }
+
+    .architecture-node {
+      min-width: 0;
+      display: grid;
+      place-items: center;
+      padding: 10px 9px;
+      border-radius: 15px;
+      border: 1px solid rgba(88,213,255,0.30);
+      background: rgba(88,213,255,0.12);
+      color: #14243d;
+      font-size: 11px;
+      font-weight: 900;
+      text-align: center;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .architecture-node.is-terminal {
+      border-color: rgba(124,92,255,0.34);
+      background: rgba(124,92,255,0.11);
+    }
+
+    .architecture-arrow {
+      display: none;
+    }
+
+    .architecture-safety-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 14px 0 0;
+    }
+
+    .architecture-safety-card {
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(49, 88, 138, 0.13);
+      background: rgba(255,255,255,0.50);
+      color: #40536f;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .architecture-safety-card strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #13213a;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .viewer-case-meta {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .architecture-layers,
+      .architecture-safety-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .architecture-route {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      .viewer-case-meta {
+        grid-template-columns: 1fr;
+      }
+
+      .architecture-route {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .viewer-image {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+      border: 1px solid rgba(32, 63, 104, 0.14);
+      background: #e9f2ff;
+      object-fit: contain;
+      max-height: 620px;
+    }
+
+    .viewer-link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .viewer-raw-link {
+      color: #102033;
+      border-color: rgba(14, 105, 144, 0.28);
+      background: rgba(88,213,255,0.12);
+    }
+
+    .telegram-snapshot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+      align-items: start;
+    }
+
+    .telegram-snapshot-card {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 22px;
+      border: 1px solid rgba(14, 105, 144, 0.16);
+      background:
+        linear-gradient(rgba(247, 251, 255, 0.90), rgba(237, 245, 255, 0.96)),
+        radial-gradient(circle at 50% 4%, rgba(88,213,255,0.16), transparent 42%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.64), 0 18px 42px rgba(23,38,65,0.10);
+      color: #17243c;
+      text-decoration: none;
+      min-width: 0;
+      transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+    }
+
+    .telegram-snapshot-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(14, 105, 144, 0.34);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.70), 0 22px 52px rgba(23,38,65,0.16);
+    }
+
+    .telegram-snapshot-card img {
+      width: 100%;
+      height: 270px;
+      object-fit: contain;
+      object-position: top center;
+      border-radius: 16px;
+      border: 1px solid rgba(32, 63, 104, 0.12);
+      background: #eef4ff;
+      display: block;
+    }
+
+    .telegram-snapshot-card.is-tall img {
+      height: 360px;
+    }
+
+    .telegram-snapshot-caption strong {
+      display: block;
+      color: #102033;
+      font-size: 14px;
+      line-height: 1.24;
+      margin-bottom: 4px;
+    }
+
+    .telegram-snapshot-caption span {
+      display: block;
+      color: #52627f;
+      font-size: 12px;
+      line-height: 1.42;
+    }
+
+    .viewer-error {
+      color: #7c2430;
+      background: rgba(255,107,122,0.10);
+      border: 1px solid rgba(255,107,122,0.26);
+      padding: 14px 16px;
+      border-radius: 16px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .section,
+      .case-grid,
+      .viewer-shell,
+      .viewer-mini-grid,
+      .telegram-snapshot-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wide {
+        grid-column: span 1;
+      }
+
+      .viewer-sidebar {
+        border-right: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.10);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="card">
+        <div class="brand-lockup">
+          <img class="brand-logo" src="assets/nexus-vector-logo.png" alt="Nexus Vector logo" />
+          <div>
+            <div class="brand-name">Nexus Vector</div>
+            <div class="eyebrow"><span class="dot"></span> Hackathon MVP</div>
+          </div>
+        </div>
+        <h1>Nexus Vector</h1>
+        <p class="subtitle">
+          A Verifiable AI Risk Agent for crypto trading decisions.
+          Nexus Vector turns off-chain risk decisions into deterministic proofs
+          that can be anchored on a Mantle-compatible proof registry.
+        </p>
+
+        <div class="pill-row">
+          <span class="pill">Verifiable AI Risk Agent</span>
+          <span class="pill">Mantle Proof Layer</span>
+          <span class="pill">Capital Preservation</span>
+          <span class="pill">Decision Hashing</span>
+          <span class="pill">No Private Data On-Chain</span>
+        </div>
+
+        <div class="hero-actions" aria-label="Dashboard presentation shortcuts">
+          <button class="hero-action viewer-preset-link" type="button" data-preset="overview">Project Overview</button>
+          <button class="hero-action viewer-preset-link" type="button" data-preset="verification">Proof Flow</button>
+          <button class="hero-action viewer-preset-link" type="button" data-preset="architecture" onclick="window.nexusOpenArchitecture && window.nexusOpenArchitecture()">Architecture →</button>
+          <button class="hero-action viewer-preset-link" type="button" data-preset="telegram">Telegram Snapshots</button>
+          <a class="hero-action" href="#proof-matrix">Proof Cases</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>MVP Status</h2>
+        <div class="metric-grid">
+          <div class="metric">
+            <div class="label">Proof layer</div>
+            <div class="value good">Active</div>
+          </div>
+          <div class="metric">
+            <div class="label">Registry</div>
+            <div class="value warn">Ready</div>
+          </div>
+          <div class="metric">
+            <div class="label">Demo cases</div>
+            <div class="value">5 verified</div>
+          </div>
+          <div class="metric">
+            <div class="label">Mode</div>
+            <div class="value">MVP</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<!-- NEXUS_PROOF_MATRIX_START -->
+<section class="nexus-proof-matrix" id="proof-matrix">
+  <style>
+    .nexus-proof-matrix {
+      margin: 26px auto 28px;
+      padding: 40px;
+      max-width: 1120px;
+      border: 1px solid rgba(126, 231, 255, 0.22);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(126, 231, 255, 0.14), transparent 32%),
+        radial-gradient(circle at 88% 20%, rgba(168, 85, 247, 0.12), transparent 30%),
+        rgba(8, 12, 28, 0.72);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+    .nexus-proof-matrix h2 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+    .nexus-proof-matrix .proof-intro {
+      margin: 0 0 28px;
+      max-width: 820px;
+      color: rgba(235, 245, 255, 0.78);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .proof-card {
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.045);
+      backdrop-filter: blur(10px);
+    }
+    .proof-card-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .proof-event {
+      color: #7ee7ff;
+      font-weight: 700;
+    }
+    .proof-result {
+      color: #d8b4fe;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .proof-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+    .proof-card p {
+      margin: 0 0 16px;
+      color: rgba(235, 245, 255, 0.72);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .proof-meta {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: rgba(235, 245, 255, 0.72);
+      font-size: 12px;
+    }
+    .proof-meta code {
+      color: #b5f4ff;
+      font-size: 11px;
+      word-break: break-all;
+    }
+    .proof-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .proof-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(126, 231, 255, 0.28);
+      color: #dffbff;
+      text-decoration: none;
+      font-size: 12px;
+      background: rgba(126, 231, 255, 0.08);
+    }
+    .proof-link:hover {
+      border-color: rgba(126, 231, 255, 0.65);
+      background: rgba(126, 231, 255, 0.15);
+    }
+    .proof-note {
+      margin-top: 24px;
+      color: rgba(235, 245, 255, 0.66);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    @media (max-width: 1100px) {
+      .proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 680px) {
+      .nexus-proof-matrix {
+        padding: 24px;
+        margin-top: 48px;
+      }
+      .proof-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <h2>Verifiable Decision Proof Matrix</h2>
+  <p class="proof-intro">
+    Nexus Vector is not presented as a profit-only bot. The MVP demonstrates a risk-agent lifecycle:
+    blocked entries, controlled losses, protected exits, flat liquidation, and verified take-profit execution.
+    Each case is represented by a public decision JSON and a canonical SHA-256 proof hash.
+  </p>
+
+  <div class="proof-grid">
+    
+      <article class="proof-card">
+        <div class="proof-card-topline">
+          <span class="proof-event">ENTRY_TOO_CLOSE</span>
+          <span class="proof-result">0 risk</span>
+        </div>
+        <h3>Entry Too Close</h3>
+        <p>Blocked a late entry instead of chasing price.</p>
+        <div class="proof-meta">
+          <span>Decision: <strong>BLOCK_ENTRY</strong></span>
+          <span>Hash: <code title="0x66388c31f1528c8157ebda04acd2d36d0bf3e4aa69395d9dabdf73ebb05ca025">0x66388c31f1...b05ca025</code></span>
+        </div>
+        <div class="proof-links">
+          <a class="proof-link viewer-link" href="../docs/demo/CASE_ENTRY_TOO_CLOSE_20260612.md" data-viewer="markdown" data-title="Entry Too Close" target="_blank" rel="noopener noreferrer">Case</a>
+          <a class="proof-link viewer-link" href="../docs/demo/decision_entry_too_close_20260612.json" data-viewer="json" data-title="Entry Too Close — decision JSON" target="_blank" rel="noopener noreferrer">Decision JSON</a>
+          
+        </div>
+      </article>
+
+      <article class="proof-card">
+        <div class="proof-card-topline">
+          <span class="proof-event">CLOSED_SL</span>
+          <span class="proof-result">-0.37%</span>
+        </div>
+        <h3>Controlled Stop-Loss</h3>
+        <p>Closed loss through verified SELL and terminal state.</p>
+        <div class="proof-meta">
+          <span>Decision: <strong>EXIT_POSITION</strong></span>
+          <span>Hash: <code title="0x0a3f55e319bbd76f0fb8caa213ff5e0106b1f054cd975a35b952c390ef549a78">0x0a3f55e319...ef549a78</code></span>
+        </div>
+        <div class="proof-links">
+          <a class="proof-link viewer-link" href="../docs/demo/CASE_CLOSED_SL_20260611.md" data-viewer="markdown" data-title="Controlled Stop-Loss" target="_blank" rel="noopener noreferrer">Case</a>
+          <a class="proof-link viewer-link" href="../docs/demo/decision_closed_sl_20260611.json" data-viewer="json" data-title="Controlled Stop-Loss — decision JSON" target="_blank" rel="noopener noreferrer">Decision JSON</a>
+          
+        </div>
+      </article>
+
+      <article class="proof-card">
+        <div class="proof-card-topline">
+          <span class="proof-event">PROTECTED_SL_EXIT</span>
+          <span class="proof-result">+0.11%</span>
+        </div>
+        <h3>Protected SL Exit</h3>
+        <p>Moved risk to breakeven protection before SL exit.</p>
+        <div class="proof-meta">
+          <span>Decision: <strong>EXIT_POSITION</strong></span>
+          <span>Hash: <code title="0x6a9f6d62c2a0cac5a618085aaea51132779c1402e07869511f29034a757144ed">0x6a9f6d62c2...757144ed</code></span>
+        </div>
+        <div class="proof-links">
+          <a class="proof-link viewer-link" href="../docs/demo/CASE_PROTECTED_SL_20260612.md" data-viewer="markdown" data-title="Protected SL Exit" target="_blank" rel="noopener noreferrer">Case</a>
+          <a class="proof-link viewer-link" href="../docs/demo/decision_protected_sl_20260612.json" data-viewer="json" data-title="Protected SL Exit — decision JSON" target="_blank" rel="noopener noreferrer">Decision JSON</a>
+          
+        </div>
+      </article>
+
+      <article class="proof-card">
+        <div class="proof-card-topline">
+          <span class="proof-event">CLOSED_FLAT</span>
+          <span class="proof-result">-0.01%</span>
+        </div>
+        <h3>Flat Exit</h3>
+        <p>Preserved capital when continuation failed.</p>
+        <div class="proof-meta">
+          <span>Decision: <strong>EXIT_POSITION</strong></span>
+          <span>Hash: <code title="0xfd97a117bc486c743b1d1ad90376bf7ca381a1d1814d6b0d0482f7b11842497a">0xfd97a117bc...1842497a</code></span>
+        </div>
+        <div class="proof-links">
+          <a class="proof-link viewer-link" href="../docs/demo/CASE_CLOSED_FLAT_20260612.md" data-viewer="markdown" data-title="Flat Exit" target="_blank" rel="noopener noreferrer">Case</a>
+          <a class="proof-link viewer-link" href="../docs/demo/decision_closed_flat_20260612.json" data-viewer="json" data-title="Flat Exit — decision JSON" target="_blank" rel="noopener noreferrer">Decision JSON</a>
+          <a class="proof-link viewer-link" href="../docs/demo/xrp_closed_flat_20260612.png" data-viewer="image" data-title="Flat Exit — chart" target="_blank" rel="noopener noreferrer">Chart</a>
+          
+        </div>
+      </article>
+
+      <article class="proof-card">
+        <div class="proof-card-topline">
+          <span class="proof-event">CLOSED_TP</span>
+          <span class="proof-result">+0.70%</span>
+        </div>
+        <h3>Verified Take-Profit</h3>
+        <p>Captured TP and accepted only verified average exit price.</p>
+        <div class="proof-meta">
+          <span>Decision: <strong>EXIT_POSITION</strong></span>
+          <span>Hash: <code title="0xa3cb4a674a237518820f728631cab25d0051f57665ef1b4fd23e67d0ed75f971">0xa3cb4a674a...ed75f971</code></span>
+        </div>
+        <div class="proof-links">
+          <a class="proof-link viewer-link" href="../docs/demo/CASE_CLOSED_TP_20260612.md" data-viewer="markdown" data-title="Verified Take-Profit" target="_blank" rel="noopener noreferrer">Case</a>
+          <a class="proof-link viewer-link" href="../docs/demo/decision_closed_tp_20260612.json" data-viewer="json" data-title="Verified Take-Profit — decision JSON" target="_blank" rel="noopener noreferrer">Decision JSON</a>
+          <a class="proof-link viewer-link" href="../docs/demo/xrp_closed_tp_20260612.png" data-viewer="image" data-title="Verified Take-Profit — chart" target="_blank" rel="noopener noreferrer">Chart</a>
+        </div>
+      </article>
+
+  </div>
+
+  <p class="proof-note">
+    Public demo files redact exchange order IDs and secrets. The Mantle layer verifies decision proofs,
+    not private exchange credentials or raw trading logs.
+  </p>
+</section>
+<!-- NEXUS_PROOF_MATRIX_END -->
+
+<!-- NEXUS_PRESENTATION_VIEWER_START -->
+<section class="nexus-presentation-viewer" id="nexus-presentation-viewer" aria-label="Nexus Vector presentation viewer">
+  <div class="viewer-shell">
+    <aside class="viewer-sidebar">
+      <p class="viewer-kicker">Presentation viewer</p>
+      <h2>One-page demo surface</h2>
+      <p>
+        Open project context, architecture, proof cases, JSON records, and chart snapshots
+        without leaving the branded dashboard.
+      </p>
+      <div class="viewer-actions" aria-label="Presentation viewer tabs">
+        <button class="viewer-action viewer-preset-link is-active" type="button" data-preset="overview">Project Overview</button>
+        <button class="viewer-action viewer-preset-link" type="button" data-preset="verification">Verification Flow</button>
+        <button class="viewer-action viewer-preset-link" type="button" data-preset="architecture" onclick="window.nexusOpenArchitecture && window.nexusOpenArchitecture()">Runtime Architecture</button>
+        <button class="viewer-action viewer-preset-link" type="button" data-preset="telegram">Telegram Snapshots</button>
+      </div>
+
+      <div class="viewer-demo-shortcuts" aria-label="Demo case shortcuts">
+        <div class="viewer-demo-title">Demo cases</div>
+        <div class="viewer-demo-list">
+          <a class="viewer-demo-link viewer-link" href="../docs/demo/CASE_ENTRY_TOO_CLOSE_20260612.md" data-viewer="markdown" data-title="Entry Too Close" target="_blank" rel="noopener noreferrer"><span>Entry blocked</span><small>0 risk</small></a>
+          <a class="viewer-demo-link viewer-link" href="../docs/demo/CASE_CLOSED_SL_20260611.md" data-viewer="markdown" data-title="Controlled Stop-Loss" target="_blank" rel="noopener noreferrer"><span>Controlled SL</span><small>-0.37%</small></a>
+          <a class="viewer-demo-link viewer-link" href="../docs/demo/CASE_PROTECTED_SL_20260612.md" data-viewer="markdown" data-title="Protected SL Exit" target="_blank" rel="noopener noreferrer"><span>Protected SL</span><small>+0.11%</small></a>
+          <a class="viewer-demo-link viewer-link" href="../docs/demo/CASE_CLOSED_FLAT_20260612.md" data-viewer="markdown" data-title="Flat Exit" target="_blank" rel="noopener noreferrer"><span>Flat exit</span><small>-0.01%</small></a>
+          <a class="viewer-demo-link viewer-link" href="../docs/demo/CASE_CLOSED_TP_20260612.md" data-viewer="markdown" data-title="Verified Take-Profit" target="_blank" rel="noopener noreferrer"><span>Take-profit</span><small>+0.70%</small></a>
+        </div>
+      </div>
+    </aside>
+
+    <div class="viewer-content">
+      <article class="viewer-window">
+        <div class="viewer-window-header">
+          <div>
+            <h2 class="viewer-window-title" id="viewer-title">Project Overview</h2>
+            <p class="viewer-window-subtitle" id="viewer-subtitle">A concise story view for the hackathon demo.</p>
+          </div>
+          <span class="viewer-window-badge" id="viewer-badge">Overview</span>
+        </div>
+        <div class="viewer-window-body" id="viewer-body"></div>
+      </article>
+    </div>
+  </div>
+</section>
+<!-- NEXUS_PRESENTATION_VIEWER_END -->
+
+    <div class="footer">
+      Nexus Vector — Verifiable AI Risk Agent · Hackathon MVP
+    </div>
+
+
+
+<script>
+  (function () {
+    const viewer = document.getElementById("nexus-presentation-viewer");
+    const viewerTitle = document.getElementById("viewer-title");
+    const viewerSubtitle = document.getElementById("viewer-subtitle");
+    const viewerBadge = document.getElementById("viewer-badge");
+    const viewerBody = document.getElementById("viewer-body");
+
+    if (!viewer || !viewerTitle || !viewerSubtitle || !viewerBadge || !viewerBody) {
+      return;
+    }
+
+    const presets = {
+      overview: {
+        title: "Project Overview",
+        subtitle: "The short story behind Nexus Vector, prepared for a one-page hackathon walkthrough.",
+        badge: "Overview",
+        html: `
+          <p>
+            Nexus Vector started from a personal need: a trading system that would be more than automated execution.
+            The goal was to make the decision process safer, easier to control, and easier to verify.
+          </p>
+          <div class="viewer-mini-grid">
+            <div class="viewer-mini-card"><strong>Risk-first</strong><span>Execution is wrapped in capital-preservation checks and terminal states.</span></div>
+            <div class="viewer-mini-card"><strong>Traceable</strong><span>Important decisions are stored as structured JSON records.</span></div>
+            <div class="viewer-mini-card"><strong>Proof-ready</strong><span>Decision records are converted into deterministic proof hashes.</span></div>
+          </div>
+          <p>
+            Nexus Vector was built with the help of Gemini and GPT as development assistants.
+            They helped accelerate coding, structuring, and iteration, while the product direction,
+            safety priorities, architecture choices, and final decisions were driven by the project owner.
+          </p>
+          <div class="viewer-soft-note">
+            The focus is not only execution. Nexus Vector adds safety, traceability, and a Mantle-ready verification layer on top of the trading workflow.
+          </div>
+        `
+      },
+      verification: {
+        title: "Verification Flow",
+        subtitle: "How an off-chain trading decision becomes a deterministic proof commitment.",
+        badge: "Proof Layer",
+        html: `
+          <div class="flow">
+            <div class="flow-step"><span class="num">1</span> A risk decision is saved as structured JSON.</div>
+            <div class="flow-step"><span class="num">2</span> The JSON is canonicalized and hashed with SHA-256.</div>
+            <div class="flow-step"><span class="num">3</span> The hash becomes a proof commitment for a Mantle-compatible registry.</div>
+            <div class="flow-step"><span class="num">4</span> Public demo files can be checked against the same deterministic hash.</div>
+          </div>
+          <div class="viewer-soft-note">
+            The proof layer verifies the decision record, not private exchange credentials, raw logs, or personal trading data.
+          </div>
+        `
+      },
+      architecture: {
+        title: "Runtime Architecture",
+        subtitle: "A simple view of how Nexus Vector connects execution safety with verifiable decisions.",
+        badge: "Architecture",
+        html: `
+          <div class="architecture-layers" aria-label="Architecture layers">
+            <div class="architecture-layer-card"><strong>1. Market & Risk Core</strong><span>Scans the market, validates setup quality, and blocks unsafe entries.</span></div>
+            <div class="architecture-layer-card"><strong>2. State Machine</strong><span>Controls STOPPED, RUNNING, WAITING_BUY, and HOLDING_SELL states.</span></div>
+            <div class="architecture-layer-card"><strong>3. Decision Record</strong><span>Stores important actions as structured public-safe JSON evidence.</span></div>
+            <div class="architecture-layer-card"><strong>4. Proof Layer</strong><span>Turns decision records into deterministic hashes for Mantle-ready verification.</span></div>
+          </div>
+
+          <div class="architecture-flow-title">Runtime state route</div>
+          <div class="architecture-route" aria-label="Runtime state route">
+            <div class="architecture-node">STOPPED</div>
+            <div class="architecture-node">RUNNING</div>
+            <div class="architecture-node">WAITING BUY</div>
+            <div class="architecture-node">HOLDING SELL</div>
+            <div class="architecture-node is-terminal">VERIFIED EXIT</div>
+            <div class="architecture-node is-terminal">PROOF HASH</div>
+            <div class="architecture-node is-terminal">COOLDOWN</div>
+          </div>
+
+          <div class="architecture-safety-grid" aria-label="Safety properties">
+            <div class="architecture-safety-card"><strong>Restart recovery</strong>SQLite state is restored before any new trading cycle.</div>
+            <div class="architecture-safety-card"><strong>No duplicate exposure</strong>The agent blocks new BUY flow when active position evidence exists.</div>
+            <div class="architecture-safety-card"><strong>Verified exit</strong>Closed trades pass through safe exit-price selection before proof records are shown.</div>
+          </div>
+
+          <div class="viewer-soft-note">
+            The public diagram is intentionally simplified. It shows the control and verification flow without exposing private strategy thresholds.
+          </div>
+        `
+      },
+      telegram: {
+        title: "Telegram Snapshots",
+        subtitle: "Public-safe screenshots showing how the agent communicates risk, outcomes, and live control status.",
+        badge: "Interface",
+        html: `
+          <p>
+            Telegram is used as a private control and notification layer. For the public demo, the dashboard shows prepared English screenshots instead of a live chat.
+          </p>
+
+          <div class="telegram-snapshot-grid" aria-label="Telegram public demo screenshots">
+            <a class="telegram-snapshot-card viewer-link" href="assets/telegram/telegram_order_cancelled_redacted_en.png" data-viewer="image" data-title="Telegram — unsafe setup canceled" target="_blank" rel="noopener noreferrer">
+              <img src="assets/telegram/telegram_order_cancelled_redacted_en.png" alt="Telegram screenshot showing a canceled BUY LIMIT after a safer higher low appeared" loading="lazy" />
+              <div class="telegram-snapshot-caption">
+                <strong>Unsafe setup canceled</strong>
+                <span>The agent cancels a pending BUY LIMIT when market structure changes before entry.</span>
+              </div>
+            </a>
+
+            <a class="telegram-snapshot-card viewer-link" href="assets/telegram/telegram_take_profit_closed_en.png" data-viewer="image" data-title="Telegram — breakeven protection and take-profit" target="_blank" rel="noopener noreferrer">
+              <img src="assets/telegram/telegram_take_profit_closed_en.png" alt="Telegram screenshot showing breakeven protection and a take-profit close" loading="lazy" />
+              <div class="telegram-snapshot-caption">
+                <strong>Protected take-profit</strong>
+                <span>Breakeven protection is activated before the position is closed by take-profit.</span>
+              </div>
+            </a>
+
+            <a class="telegram-snapshot-card viewer-link is-tall" href="assets/telegram/telegram_status_control_en.png" data-viewer="image" data-title="Telegram — live status and control layer" target="_blank" rel="noopener noreferrer">
+              <img src="assets/telegram/telegram_status_control_en.png" alt="Telegram screenshot showing live exchange monitoring and control buttons" loading="lazy" />
+              <div class="telegram-snapshot-caption">
+                <strong>Status and control</strong>
+                <span>Live balances, open orders, and bot controls remain visible from the operator interface.</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="viewer-soft-note">
+            Public screenshots must not expose chat IDs, API keys, tokens, or raw exchange order identifiers. These images are intended as demo-safe interface evidence.
+          </div>
+        `
+      }
+    };
+
+    function setActivePreset(presetName) {
+      document.querySelectorAll(".viewer-preset-link").forEach(function (button) {
+        button.classList.toggle("is-active", button.getAttribute("data-preset") === presetName);
+      });
+    }
+
+    function renderPreset(presetName, shouldScroll) {
+      const preset = presets[presetName] || presets.overview;
+      viewerTitle.textContent = preset.title;
+      viewerSubtitle.textContent = preset.subtitle;
+      viewerBadge.textContent = preset.badge;
+      viewerBody.innerHTML = preset.html;
+      setActivePreset(presetName);
+      if (shouldScroll) {
+        viewer.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    window.nexusOpenArchitecture = function () {
+      renderPreset("architecture", true);
+    };
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function inlineMarkdown(value) {
+      return escapeHtml(value).replace(/`([^`]+)`/g, "<code>$1</code>");
+    }
+
+    function normalizeCaseLabel(label) {
+      return label
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, function (char) { return char.toUpperCase(); });
+    }
+
+    function renderCaseMeta(items) {
+      if (!items.length) {
+        return "";
+      }
+      return '<div class="viewer-case-meta">' + items.map(function (item) {
+        return '<div class="viewer-case-meta-item">' +
+          '<span class="viewer-case-meta-label">' + escapeHtml(item.label) + '</span>' +
+          '<span class="viewer-case-meta-value">' + inlineMarkdown(item.value) + '</span>' +
+        '</div>';
+      }).join("") + '</div>';
+    }
+
+    function markdownToHtml(markdown) {
+      let lines = markdown.replace(/\r\n/g, "\n").split("\n");
+      let html = "";
+      let inList = false;
+      let inCode = false;
+      let code = [];
+      let paragraph = [];
+
+      if (lines.length && /^#\s+/.test(lines[0])) {
+        // The viewer already has a clean title in the header, so skip the first markdown H1.
+        lines = lines.slice(1);
+      }
+
+      while (lines.length && lines[0].trim() === "") {
+        lines.shift();
+      }
+
+      const metaItems = [];
+      while (lines.length) {
+        const line = lines[0];
+        if (/^##\s+/.test(line) || /^#\s+/.test(line) || line.trim() === "") {
+          if (line.trim() === "") {
+            lines.shift();
+            continue;
+          }
+          break;
+        }
+        const match = line.match(/^([A-Za-z][A-Za-z\s]+):\s*(.+)$/);
+        if (!match) {
+          break;
+        }
+        const label = match[1].trim();
+        const value = match[2].trim();
+        const allowed = ["Date", "Agent", "Market", "Timeframe", "Event Type", "Decision Type", "Close Reason"];
+        if (allowed.indexOf(label) === -1) {
+          break;
+        }
+        metaItems.push({ label: label, value: value });
+        lines.shift();
+      }
+
+      html += renderCaseMeta(metaItems);
+
+      function closeList() {
+        if (inList) {
+          html += "</ul>";
+          inList = false;
+        }
+      }
+
+      function closeParagraph() {
+        if (paragraph.length) {
+          html += "<p>" + inlineMarkdown(paragraph.join(" ").trim()) + "</p>";
+          paragraph = [];
+        }
+      }
+
+      function closeCode() {
+        if (inCode) {
+          html += "<pre>" + escapeHtml(code.join("\n")) + "</pre>";
+          code = [];
+          inCode = false;
+        }
+      }
+
+      lines.forEach(function (line) {
+        if (line.trim().startsWith("```")) {
+          if (inCode) {
+            closeCode();
+          } else {
+            closeParagraph();
+            closeList();
+            inCode = true;
+            code = [];
+          }
+          return;
+        }
+
+        if (inCode) {
+          code.push(line);
+          return;
+        }
+
+        if (/^###\s+/.test(line)) {
+          closeParagraph();
+          closeList();
+          html += "<h3>" + inlineMarkdown(line.replace(/^###\s+/, "")) + "</h3>";
+        } else if (/^##\s+/.test(line)) {
+          closeParagraph();
+          closeList();
+          html += "<h2>" + inlineMarkdown(line.replace(/^##\s+/, "")) + "</h2>";
+        } else if (/^#\s+/.test(line)) {
+          closeParagraph();
+          closeList();
+          html += "<h1>" + inlineMarkdown(line.replace(/^#\s+/, "")) + "</h1>";
+        } else if (/^[-*]\s+/.test(line)) {
+          closeParagraph();
+          if (!inList) {
+            html += "<ul>";
+            inList = true;
+          }
+          html += "<li>" + inlineMarkdown(line.replace(/^[-*]\s+/, "")) + "</li>";
+        } else if (line.trim() === "") {
+          closeParagraph();
+          closeList();
+        } else if (/^---+$/.test(line.trim())) {
+          closeParagraph();
+          closeList();
+          html += "<hr>";
+        } else {
+          closeList();
+          paragraph.push(line.trim());
+        }
+      });
+
+      closeParagraph();
+      closeList();
+      closeCode();
+      return html;
+    }
+
+    function showLoading(title, subtitle, badge) {
+      viewerTitle.textContent = title;
+      viewerSubtitle.textContent = subtitle;
+      viewerBadge.textContent = badge;
+      viewerBody.innerHTML = '<p>Loading content into the branded viewer...</p>';
+      setActivePreset("");
+      viewer.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function showError(href) {
+      viewerBody.innerHTML = `
+        <div class="viewer-error">
+          The viewer could not load <strong>${escapeHtml(href)}</strong> directly from this browser context.<br><br>
+          For local testing, run <code>python -m http.server 8000</code> from the repository root and open
+          <code>http://localhost:8000/frontend/</code>. GitHub Pages also supports this view.
+          <br><br>If you open the file directly with <code>file://</code>, some browsers block local JSON and markdown loading.
+        </div>
+        <div class="viewer-link-row">
+          <a class="viewer-raw-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">Open raw file</a>
+        </div>
+      `;
+    }
+
+    async function renderRemoteContent(link) {
+      const href = link.getAttribute("href");
+      const kind = link.getAttribute("data-viewer") || "markdown";
+      const title = link.getAttribute("data-title") || link.textContent.trim();
+      const badge = kind === "json" ? "Decision JSON" : kind === "image" ? "Chart" : "Case File";
+      const subtitle = kind === "json"
+        ? "Structured decision evidence displayed inside the branded dashboard."
+        : kind === "image"
+          ? "Trade chart snapshot displayed without leaving the one-page demo."
+          : "";
+
+      showLoading(title, subtitle, badge);
+
+      if (kind === "image") {
+        viewerBody.innerHTML = `
+          <img class="viewer-image" src="${escapeHtml(href)}" alt="${escapeHtml(title)}">
+          <div class="viewer-link-row">
+            <a class="viewer-raw-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">Open image in new tab</a>
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        const response = await fetch(href, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+        const rawText = await response.text();
+
+        if (kind === "json") {
+          let pretty = rawText;
+          try {
+            pretty = JSON.stringify(JSON.parse(rawText), null, 2);
+          } catch (error) {
+            // Keep raw text if a JSON file is not perfectly formatted.
+          }
+          viewerBody.innerHTML = `
+            <pre class="viewer-code">${escapeHtml(pretty)}</pre>
+            <div class="viewer-link-row">
+              <a class="viewer-raw-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">Open raw JSON</a>
+            </div>
+          `;
+        } else {
+          viewerBody.innerHTML = `
+            <div class="viewer-markdown">${markdownToHtml(rawText)}</div>
+            <div class="viewer-link-row">
+              <a class="viewer-raw-link" href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">Open raw case file</a>
+            </div>
+          `;
+        }
+      } catch (error) {
+        showError(href);
+      }
+    }
+
+    document.addEventListener("click", function (event) {
+      const presetButton = event.target.closest(".viewer-preset-link");
+      if (presetButton) {
+        event.preventDefault();
+        renderPreset(presetButton.getAttribute("data-preset"), true);
+        return;
+      }
+
+      const viewerLink = event.target.closest(".viewer-link");
+      if (viewerLink) {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+          return;
+        }
+        event.preventDefault();
+        renderRemoteContent(viewerLink);
+      }
+    });
+
+    renderPreset("overview", false);
+  })();
+</script>
+
+</main>
+
+
+</body>
+</html>
+

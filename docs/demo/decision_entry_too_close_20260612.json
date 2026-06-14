@@ -1,0 +1,39 @@
+{
+  "agent_name": "Nexus Vector",
+  "agent_type": "Verifiable AI Risk Agent",
+  "event_type": "ENTRY_TOO_CLOSE",
+  "decision_type": "BLOCK_ENTRY",
+  "symbol": "XRP/USDT",
+  "timeframe": "5m",
+  "timestamp_local": "2026-06-12T21:30:15+03:00",
+  "timestamp_utc": "2026-06-12T18:30:15Z",
+  "market_context": {
+    "swing_low": 1.1285,
+    "fvg_bottom": 1.1302,
+    "fvg_top": 1.1309,
+    "swing_high": 1.134,
+    "current_price_at_rejection": 1.1314,
+    "proposed_entry": 1.1304,
+    "stop_loss": 1.1274,
+    "take_profit": 1.134,
+    "risk_reward_ratio": 1.2,
+    "entry_discount_pct": 0.09,
+    "required_min_discount_pct": 0.15
+  },
+  "decision_reason": "A valid structural setup was detected and minimum R:R was satisfied, but the proposed entry was too close to the current market price. The agent rejected the trade to avoid chasing price.",
+  "execution_result": {
+    "order_sent": false,
+    "order_id": null,
+    "position_opened": false,
+    "capital_at_risk_usdt": 0,
+    "final_bot_status": "RUNNING",
+    "final_stage": "IDLE"
+  },
+  "safety_layers": [
+    "PRE_TRADE_RISK_FILTER",
+    "MIN_ENTRY_DISCOUNT_GATE",
+    "NO_CHASE_EXECUTION_POLICY",
+    "ORDER_NOT_SENT"
+  ],
+  "proof_purpose": "Demonstrates autonomous pre-trade risk control: the agent blocked an unsafe entry before capital was exposed."
+}

@@ -1,0 +1,77 @@
+{
+  "agent_name": "Nexus Vector",
+  "agent_type": "Verifiable AI Risk Agent",
+  "event_type": "PROTECTED_SL_EXIT",
+  "decision_type": "EXIT_POSITION",
+  "symbol": "XRP/USDT",
+  "timeframe": "5m",
+  "timestamp_local": "2026-06-12T19:36:27+03:00",
+  "timestamp_utc": "2026-06-12T16:36:27Z",
+  "close_reason": "CLOSED_SL",
+  "risk_action": "BREAKEVEN_STOP_PROTECTION",
+  "order_reference": {
+    "order_id": "REDACTED",
+    "order_id_redacted": true
+  },
+  "market_context": {
+    "entry_price": 1.1313,
+    "initial_stop_loss": 1.1264,
+    "protected_stop_loss": 1.1315,
+    "take_profit": 1.1577,
+    "exit_price": 1.1325,
+    "qty": 26.51,
+    "position_size_usdt": 29.99,
+    "risk_reward_ratio_at_entry": 5.39
+  },
+  "execution_verification": {
+    "sell_balance_check": {
+      "asset": "XRP",
+      "free": 26.51,
+      "used": 0.0,
+      "total": 26.51
+    },
+    "rejected_exit_price_candidates": [
+      {
+        "source": "price",
+        "exit": 1.1095,
+        "fallback": 1.1315,
+        "deviation_pct": 1.94
+      },
+      {
+        "source": "info.price",
+        "exit": 1.1095,
+        "fallback": 1.1315,
+        "deviation_pct": 1.94
+      }
+    ],
+    "verified_exit_price": {
+      "source": "average",
+      "exit": 1.1325,
+      "fallback": 1.1315,
+      "deviation_pct": 0.09
+    }
+  },
+  "trade_result": {
+    "pnl_usdt": 0.0318,
+    "pnl_pct": 0.11,
+    "result_type": "protected_positive_stop_exit"
+  },
+  "final_state": {
+    "position_status": "closed",
+    "bot_status": "RUNNING",
+    "stage": "IDLE",
+    "cooldown_reason": "CLOSED_SL",
+    "cooldown_seconds": 2700
+  },
+  "safety_layers": [
+    "POSITION_SIZE_CAP",
+    "BUY_LIMIT_FILL_SYNC",
+    "FLAT_BREAKEVEN_PROTECTION",
+    "MARKET_SELL_BALANCE_CHECK",
+    "VERIFIED_EXIT_PRICE",
+    "TRADE_HISTORY_WRITE",
+    "COOLDOWN_AFTER_SL"
+  ],
+  "decision_reason": "The agent moved the stop-loss to breakeven protection during a flat market phase. When the protected stop was reached, it closed the position, rejected inconsistent exchange price fields, accepted the verified average execution price, saved trade history, and returned to IDLE with cooldown.",
+  "proof_purpose": "Demonstrates protected stop-loss behavior, verified execution pricing, and correct post-exit state transition."
+}

@@ -1,0 +1,78 @@
+{
+  "agent_name": "Nexus Vector",
+  "agent_type": "Verifiable AI Risk Agent",
+  "event_type": "CLOSED_SL",
+  "decision_type": "EXIT_POSITION",
+  "symbol": "XRP/USDT",
+  "timeframe": "5m",
+  "timestamp_local": "2026-06-11T15:21:33+03:00",
+  "timestamp_utc": "2026-06-11T12:21:33Z",
+  "close_reason": "CLOSED_SL",
+  "risk_action": "CONTROLLED_STOP_LOSS_EXIT",
+  "order_reference": {
+    "order_id": "REDACTED",
+    "order_id_redacted": true
+  },
+  "market_context": {
+    "entry_price": 1.1211,
+    "stop_loss": 1.1177,
+    "take_profit": 1.1267,
+    "exit_price": 1.117,
+    "qty": 26.75,
+    "position_size_usdt": 29.99,
+    "risk_reward_ratio_at_entry": 1.65
+  },
+  "execution_verification": {
+    "sell_balance_check": {
+      "asset": "XRP",
+      "free": 26.75,
+      "used": 0.0,
+      "total": 26.75
+    },
+    "rejected_exit_price_candidates": [
+      {
+        "source": "price",
+        "exit": 1.0947,
+        "fallback": 1.1174,
+        "deviation_pct": 2.03
+      },
+      {
+        "source": "info.price",
+        "exit": 1.0947,
+        "fallback": 1.1174,
+        "deviation_pct": 2.03
+      }
+    ],
+    "verified_exit_price": {
+      "source": "average",
+      "exit": 1.117,
+      "fallback": 1.1174,
+      "deviation_pct": 0.04
+    }
+  },
+  "trade_result": {
+    "pnl_usdt": -0.1097,
+    "pnl_pct": -0.37,
+    "result_type": "controlled_stop_loss"
+  },
+  "final_state": {
+    "position_status": "closed",
+    "bot_status": "RUNNING",
+    "stage": "IDLE"
+  },
+  "runtime_notes": [
+    "Temporary ticker gateway errors occurred before the SL trigger.",
+    "The agent kept the position state active and did not mark the trade closed until SELL execution was verified."
+  ],
+  "safety_layers": [
+    "POSITION_SIZE_CAP",
+    "BUY_LIMIT_FILL_SYNC",
+    "STOP_LOSS_TRIGGER",
+    "MARKET_SELL_BALANCE_CHECK",
+    "VERIFIED_EXIT_PRICE",
+    "TRADE_HISTORY_WRITE",
+    "STATE_RETURN_TO_IDLE"
+  ],
+  "decision_reason": "The market reached the configured stop-loss level. The agent executed a controlled exit, rejected inconsistent exchange price fields, accepted the verified average execution price, saved trade history, and returned to IDLE.",
+  "proof_purpose": "Demonstrates a clean controlled stop-loss exit with verified execution pricing and correct post-exit state transition."
+}

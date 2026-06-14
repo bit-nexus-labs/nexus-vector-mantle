@@ -1,0 +1,28 @@
+﻿{
+  "agent": "Nexus Vector",
+  "agent_type": "Verifiable AI Risk Agent",
+  "version": "0.1.0-hackathon",
+  "network": "Mantle",
+  "symbol": "XRPUSDT",
+  "timeframe": "5m",
+  "decision_id": "demo-decision-001",
+  "decision": "ALLOW_LIMIT_BUY",
+  "strategy_signal": {
+    "type": "BULLISH_FVG_LONG",
+    "entry_price": 1.105,
+    "stop_loss": 1.094,
+    "take_profit": 1.123,
+    "risk_reward_ratio": 1.64
+  },
+  "risk_checks": {
+    "min_rr_required": 1.2,
+    "entry_below_market": true,
+    "exchange_position_guard": "PASSED",
+    "max_position_usdt": 30.0,
+    "cooldown_status": "CLEAR"
+  },
+  "verdict": {
+    "allowed": true,
+    "reason": "Setup passes FVG geometry, R:R threshold, position guard and cooldown checks."
+  }
+}

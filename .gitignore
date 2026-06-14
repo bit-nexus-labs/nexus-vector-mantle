@@ -1,0 +1,78 @@
+# Private runtime databases
+bot_data.db
+bot_data.db-wal
+bot_data.db-shm
+
+trades_data.db
+trades_data.db-wal
+trades_data.db-shm
+
+# Optional: ignore all local SQLite databases
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Secrets / environment
+.env
+*.env
+
+# Runtime logs
+logs/
+*.log
+
+# Local terminal/runtime dumps
+terminal.txt
+terminal_window.txt
+*_terminal_window.txt
+*_terminal_window*.txt
+
+# Local developer tools
+tools/
+
+# Local text exports / temporary folders
+Texts/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+# Runtime databases / secrets
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Logs and runtime files
+logs/
+*.log
+terminal.txt
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment variants
+.env.*
+
+# Virtual environments
+.venv/
+venv/
+
+# Frontend dependencies/build
+node_modules/
+dist/
+build/
+.next/
