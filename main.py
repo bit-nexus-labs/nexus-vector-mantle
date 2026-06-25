@@ -1655,7 +1655,7 @@ async def main() -> None:
     os.system("color")
 
     print("===================================================")
-    print("      NEXUS QUANTUM ASYNC CORE ACTIVE v2.1        ")
+    print("      NEXUS VECTOR ASYNC RISK CORE ACTIVE v2.1    ")
     print("===================================================")
 
     init_db()
