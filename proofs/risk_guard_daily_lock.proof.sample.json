@@ -1,0 +1,12 @@
+{
+  "agent": "Nexus Vector",
+  "agent_type": "Verifiable AI Risk Agent",
+  "decision_id": "risk-guard-daily-lock-sample-20260624-001",
+  "source_file": "samples/risk_guard_daily_lock.sample.json",
+  "proof_type": "SHA256_DECISION_COMMITMENT",
+  "hash_algorithm": "SHA-256",
+  "decision_hash": "0xbc7ffabe2c94574df0bbdf917eeddf8e657a34c3056067e8e2fed6a0951ecb6e",
+  "network_target": "Mantle",
+  "created_at_utc": "2026-06-24T00:00:00Z",
+  "note": "This public-safe sample hash can be anchored on Mantle to prove that the Risk Guard decision record existed unchanged at proof time."
+}

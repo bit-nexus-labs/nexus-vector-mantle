@@ -1,0 +1,47 @@
+{
+  "agent": "Nexus Vector",
+  "agent_type": "Verifiable AI Risk Agent",
+  "version": "0.1.0-hackathon-public-safe",
+  "network": "Mantle",
+  "symbol": "XRPUSDT",
+  "timeframe": "5m",
+  "decision_id": "risk-guard-daily-lock-sample-20260624-001",
+  "decision_type": "RISK_GUARD_DAILY_LOCK",
+  "source": "redacted public sample",
+  "risk_guard": {
+    "metric_basis": "R-based planned-risk accounting",
+    "daily_realized_r": -2.13,
+    "daily_warning_r": -1.0,
+    "daily_reduce_risk_r": -1.5,
+    "daily_hard_lock_r": -2.0,
+    "consecutive_negative_closes": 3,
+    "state_before": "RUNNING",
+    "state_after": "AUTO_PAUSED_BY_RISK_GUARD",
+    "action": "BLOCK_NEW_BUY_ATTEMPTS",
+    "position_handling": "DO_NOT_FORCE_CLOSE_ACTIVE_POSITION",
+    "resume_policy": "NO_AUTO_RESUME_SAME_TRADING_DAY"
+  },
+  "runtime_validation": {
+    "python_compile": "PASSED",
+    "smoke_validation": "PASSED",
+    "scanner_buy_gate": "Risk Guard check is placed before scanner BUY creation",
+    "manual_stop_behavior": "Manual stop disables automatic resume eligibility",
+    "startup_safety": "Startup is designed to default to stopped state",
+    "live_hard_lock_acceptance": "PENDING_FULL_RUNTIME_SCENARIO"
+  },
+  "redaction": {
+    "private_runtime_code_included": false,
+    "raw_logs_included": false,
+    "runtime_databases_included": false,
+    "private_credentials_included": false,
+    "exchange_order_refs_included": false,
+    "telegram_identifiers_included": false,
+    "balances_included": false
+  },
+  "verdict": {
+    "allowed": false,
+    "reason": "Daily realized R reached the hard-lock threshold; new BUY attempts are blocked until the next eligible trading session or manual review.",
+    "public_claim_level": "design and smoke validated; not a production guarantee"
+  },
+  "proof_purpose": "Public-safe sample for demonstrating a verifiable Risk Guard decision without exposing private trading runtime code."
+}
