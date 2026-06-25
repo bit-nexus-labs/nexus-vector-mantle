@@ -1,4 +1,4 @@
-﻿# Nexus Vector
+# Nexus Vector
 
 **Nexus Vector** is a hackathon MVP of a **Verifiable AI Risk Agent** for crypto trading decisions.
 
@@ -120,7 +120,7 @@ frontend/
 
 main.py
 mexc_client.py
-quantum_analysis.py
+market_structure_analysis.py
 bot_interface.py
 database.py
 config.py

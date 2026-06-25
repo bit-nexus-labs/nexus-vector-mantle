@@ -31,7 +31,7 @@ from mexc_client import (
     check_order_safe,
     get_current_price_safe,
 )
-from quantum_analysis import calculate_trade_parameters, calculate_target_wall
+from market_structure_analysis import calculate_trade_parameters, calculate_target_wall
 from bot_interface import bot
 
 # Налаштування базового логера без ламаючих фільтрів
@@ -858,7 +858,7 @@ async def trade_monitor_task() -> None:
                 # Trailing SL раз на хвилину
                 if int(time.time()) % 60 < 2:
                     try:
-                        from quantum_analysis import find_latest_swing_low
+                        from market_structure_analysis import find_latest_swing_low
                         from config import SL_OFFSET_PERC
 
                         klines_raw = await fetch_market_klines()
@@ -1592,7 +1592,7 @@ async def market_scanner_task() -> None:
 
                         if int(time.time()) % 60 < 3:
                             klines = await fetch_market_klines()
-                            from quantum_analysis import find_latest_swing_low
+                            from market_structure_analysis import find_latest_swing_low
                             from config import SL_OFFSET_PERC
 
                             latest_market_low = find_latest_swing_low(klines, min_candles_right=2)

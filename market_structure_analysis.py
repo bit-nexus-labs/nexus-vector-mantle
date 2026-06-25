@@ -1,4 +1,4 @@
-# quantum_analysis.py
+# market_structure_analysis.py
 import logging
 from typing import Tuple, Optional, List, Dict, Any
 from config import FVG_OFFSET_PERC, SL_OFFSET_PERC, MIN_RISK_REWARD_RATIO
